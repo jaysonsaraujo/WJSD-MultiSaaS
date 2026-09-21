@@ -1,0 +1,35 @@
+# Ownership dos guardrails. O enforcement de verdade depende de branch protection
+# / ruleset no GitHub: este arquivo só declara quem revisa.
+#
+# Superfícies que, se mudarem sem revisão, desligam o método em silêncio —
+# hooks de agente, regras de lint, docs canônicos e a config dos gates.
+
+# Superfícies de enforcement dos agentes (Claude Code · Codex · Cursor).
+/.github/** @jaysonsaraujo
+/.agents/** @jaysonsaraujo
+/.claude/** @jaysonsaraujo
+/.codex/** @jaysonsaraujo
+/.cursor/** @jaysonsaraujo
+/tooling/** @jaysonsaraujo
+
+# Documentação canônica dos guardrails.
+/AGENTS.md @jaysonsaraujo
+/CLAUDE.md @jaysonsaraujo
+/ARCHITECTURE.md @jaysonsaraujo
+/CODE-PATTERN.md @jaysonsaraujo
+/MEMORY.md @jaysonsaraujo
+/VERCEL-OXLINT-MAPPING.md @jaysonsaraujo
+/guia.pdf @jaysonsaraujo
+
+# Config de pacote, runtime, build e gates.
+/package.json @jaysonsaraujo
+/bun.lock @jaysonsaraujo
+/bunfig.toml @jaysonsaraujo
+/lefthook.yml @jaysonsaraujo
+/.oxlintrc.json @jaysonsaraujo
+/.oxfmtrc.json @jaysonsaraujo
+/knip.json @jaysonsaraujo
+/next.config.ts @jaysonsaraujo
+/tsconfig*.json @jaysonsaraujo
+/.env.example @jaysonsaraujo
+/.gitignore @jaysonsaraujo

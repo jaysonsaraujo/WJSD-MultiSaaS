@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "bun tooling/agent-hooks/run-cursor-hook.ts inject-patterns.ts"
+      }
+    ],
+    "beforeSubmitPrompt": [
+      {
+        "command": "bun tooling/agent-hooks/run-cursor-hook.ts reinforce-patterns.ts"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "bun tooling/agent-hooks/run-cursor-hook.ts pre-pr-review-gate.ts",
+        "failClosed": true
+      },
+      {
+        "command": "bun tooling/agent-hooks/run-cursor-hook.ts guard-shell.ts",
+        "failClosed": true
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "bun tooling/agent-hooks/run-cursor-hook.ts format-after-write.ts"
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "bun tooling/agent-hooks/run-cursor-hook.ts reinforce-after-write.ts",
+        "matcher": "Write"
+      }
+    ],
+    "stop": [
+      {
+        "command": "bun tooling/agent-hooks/run-cursor-hook.ts verify-before-stop.ts",
+        "loop_limit": 3
+      }
+    ]
+  }
+}
