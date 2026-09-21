@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import { LogoutButton } from "@/features/auth/logout-button";
 import { PerfilForm } from "@/features/perfil/perfil-form";
 import { SenhaForm } from "@/features/perfil/senha-form";
 import { perfilSchema } from "@/features/perfil/perfil.schema";
@@ -39,11 +40,14 @@ async function PerfilCarregado(): Promise<React.ReactNode> {
 export default function PerfilPage(): React.ReactNode {
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-6 py-16">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Perfil</h1>
-        <p className="text-sm text-foreground/60">
-          Leitura em Server Component, mutação em Server Action. Edite os campos e salve.
-        </p>
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight">Perfil</h1>
+          <p className="text-sm text-foreground/60">
+            Leitura em Server Component, mutação em Server Action. Edite os campos e salve.
+          </p>
+        </div>
+        <LogoutButton />
       </header>
 
       <Suspense fallback={<p className="text-sm text-foreground/60">Carregando perfil...</p>}>
