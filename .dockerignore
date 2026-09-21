@@ -1,0 +1,7 @@
+.git
+.next
+node_modules
+tsconfig.tsbuildinfo
+.env*
+!.env.example
+stacksenior-review-cycle

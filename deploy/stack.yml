@@ -1,0 +1,28 @@
+services:
+  web:
+    image: 169.58.4.15:5000/wjsd-multisaas-web:2a5a509
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      NEXT_PUBLIC_API_URL: https://api.wjsd.com.br
+      INTERNAL_API_URL: https://api.wjsd.com.br
+    networks:
+      - OrionNET
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=OrionNET
+        - traefik.http.routers.wjsd-multisaas-web.entrypoints=websecure
+        - traefik.http.routers.wjsd-multisaas-web.rule=Host(`wjsd.com.br`)
+        - traefik.http.routers.wjsd-multisaas-web.tls=true
+        - traefik.http.routers.wjsd-multisaas-web.tls.certresolver=letsencryptresolver
+        - traefik.http.services.wjsd-multisaas-web.loadbalancer.server.port=3000
+
+networks:
+  OrionNET:
+    external: true
