@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
 import { PerfilForm } from "@/features/perfil/perfil-form";
+import { SenhaForm } from "@/features/perfil/senha-form";
 import { perfilSchema } from "@/features/perfil/perfil.schema";
 import { apiClient } from "@/lib/api/client";
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
@@ -21,7 +22,12 @@ async function PerfilCarregado(): Promise<React.ReactNode> {
   // fabrica um perfil vazio.
   const perfil = await apiClient(kyServer, API_ENDPOINTS.perfil.me, perfilSchema);
 
-  return <PerfilForm perfil={perfil} />;
+  return (
+    <div className="flex flex-col gap-8">
+      <PerfilForm perfil={perfil} />
+      <SenhaForm />
+    </div>
+  );
 }
 
 /**
