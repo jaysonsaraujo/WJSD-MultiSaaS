@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
   /** Sessão do usuário. Chamado browser-direct: o backend emite o cookie. */
   auth: {
     login: "api/v1/login",
+    senha: "api/v1/senha",
   },
 
   /** Perfil do usuário autenticado — a feature de exemplo do boilerplate. */
