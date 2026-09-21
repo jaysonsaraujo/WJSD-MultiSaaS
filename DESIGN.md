@@ -1,29 +1,31 @@
 ---
-name: WJSD MultiSaaS
-description: Plataforma SaaS multi-tenant para produtos de assinatura, com visual claro e confiável
+name: WJSD Sistemas e Tecnologia
+description: Plataforma SaaS multi-tenant premium para produtos de assinatura
 colors:
-  primary: '#2563EB'
-  primary-tint: '#EFF6FF'
-  primary-border: '#BFDBFE'
-  ink: '#11181C'
-  text-secondary: '#6B7280'
-  text-muted: '#9CA3AF'
-  surface: '#FFFFFF'
-  surface-alt: '#F9FAFB'
-  border: '#E5E7EB'
-  success: '#22C55E'
-  warning: '#F59E0B'
-  danger: '#EF4444'
-  info: '#3B82F6'
-  # dark mode (opcional)
-  dm-bg: '#1A1B1F'
-  dm-surface: '#222530'
-  dm-fg: '#FAFAFA'
-  dm-border: '#2E3340'
+  primary: '#8B5CF6'
+  primary-hover: '#A78BFA'
+  primary-strong: '#6D28D9'
+  primary-gradient-end: '#5B5CF0'
+  primary-border: '#6D28D9'
+  on-primary: '#FFFFFF'
+  ink: '#F8F7FF'
+  text-secondary: '#C4BDD4'
+  text-muted: '#9790A8'
+  surface: '#15111F'
+  surface-alt: '#1C172A'
+  surface-raised: '#1C172A'
+  border: '#302640'
+  accent-blue: '#2563EB'
+  shadow: '#00000059'
+  success: '#4ADE80'
+  warning: '#FBBF24'
+  danger: '#F87171'
+  info: '#60A5FA'
+  background: '#0B0912'
 typography:
   headline:
     fontFamily: '<ex.: Inter_700Bold>'
-    fontSize: '30px'
+    fontSize: '32px'
     fontWeight: 700
   title:
     fontFamily: '<ex.: Inter_600SemiBold>'
@@ -31,7 +33,7 @@ typography:
     fontWeight: 600
   body:
     fontFamily: '<ex.: Inter_400Regular>'
-    fontSize: '16px'
+    fontSize: '15px'
     fontWeight: 400
   caption:
     fontFamily: '<ex.: Inter_400Regular>'
@@ -40,9 +42,9 @@ typography:
 spacing:
   base: 4   # escala 4pt: 4, 8, 12, 16, 24, 32...
 radius:
-  sm: 6
-  md: 10
-  lg: 16
+  sm: 8
+  md: 12
+  lg: 18
 ---
 
 # Design System: WJSD MultiSaaS

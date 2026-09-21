@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "WJSD MultiSaaS",
-  description:
-    "Base compartilhada dos produtos WJSD: frontend Next.js com arquitetura imposta por lint.",
+  title: "WJSD Sistemas e Tecnologia | MultiSaaS",
+  description: "Sistemas que ajudam pessoas a ajudar pessoas.",
 };
 
 export default function RootLayout({

@@ -28,7 +28,13 @@ const SESSION_COOKIE = "session_token";
  * @returns Segue o fluxo quando há sessão; senão redireciona pra `/login`.
  */
 export function proxy(request: NextRequest): NextResponse {
-  if (request.cookies.has(SESSION_COOKIE)) {
+  const hasSession = request.cookies.has(SESSION_COOKIE);
+
+  if (request.nextUrl.pathname === "/") {
+    return NextResponse.redirect(new URL(hasSession ? "/perfil" : "/login", request.url));
+  }
+
+  if (hasSession) {
     return NextResponse.next();
   }
   return NextResponse.redirect(new URL("/login", request.url));
@@ -39,5 +45,5 @@ export function proxy(request: NextRequest): NextResponse {
  * deixa toda rota nova sem gate por padrão, que é o erro caro.
  */
 export const config = {
-  matcher: ["/perfil/:path*"],
+  matcher: ["/", "/perfil/:path*"],
 };
