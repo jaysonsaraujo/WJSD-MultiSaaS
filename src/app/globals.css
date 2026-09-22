@@ -104,17 +104,12 @@
   height: 3rem;
   flex-shrink: 0;
   place-items: center;
-  border-radius: 0.65rem;
-  background: color-mix(in srgb, var(--surface-raised) 74%, transparent);
   object-fit: contain;
-  padding: 0.35rem;
-  transition:
-    transform 180ms ease,
-    background 180ms ease;
+  padding: 0;
+  transition: transform 180ms ease;
 }
 .app-nav-link:hover .app-nav-icon,
 .app-nav-link.is-active .app-nav-icon {
-  background: color-mix(in srgb, var(--primary) 16%, var(--surface-raised));
   transform: scale(1.06);
 }
 .app-sidebar-footer {
