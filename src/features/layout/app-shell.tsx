@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
@@ -22,11 +23,29 @@ const NAV_ITEMS = [
   ["Configurações", "/configuracoes"],
 ] as const;
 
-function Icon({ label }: { label: string }): React.ReactNode {
+const ICONS = {
+  Home: "home",
+  Clientes: "clientes",
+  Planos: "planos",
+  Pagamentos: "pagamentos",
+  Produtos: "produtos",
+  Módulos: "modulos",
+  Ocorrências: "ocorrencias",
+  "Test-Drive": "test-drive",
+  "Uso de Recursos": "uso-recursos",
+  Histórico: "historico",
+  Configurações: "configuracoes",
+} as const;
+
+function Icon({ label }: { label: keyof typeof ICONS }): React.ReactNode {
   return (
-    <span className="app-nav-icon" aria-hidden="true">
-      {label.slice(0, 1)}
-    </span>
+    <Image
+      className="app-nav-icon"
+      src={`/icons/${ICONS[label]}.png`}
+      alt=""
+      width={24}
+      height={24}
+    />
   );
 }
 
@@ -63,12 +82,21 @@ export function AppShell({ children }: AppShellProps): React.ReactNode {
         </div>
         <div className="app-top-actions">
           <nav className="app-legal-links" aria-label="Informações legais">
-            <a href="#privacidade">Privacidade</a>
-            <a href="#termos">Termos de Uso</a>
-            <a href="#lgpd">LGPD</a>
+            <a href="#privacidade">
+              <Image src="/icons/privacidade.png" alt="" width={16} height={16} />
+              Privacidade
+            </a>
+            <a href="#termos">
+              <Image src="/icons/termos.png" alt="" width={16} height={16} />
+              Termos de Uso
+            </a>
+            <a href="#lgpd">
+              <Image src="/icons/lgpd.png" alt="" width={16} height={16} />
+              LGPD
+            </a>
           </nav>
           <button type="button" className="app-icon-button" aria-label="Notificações">
-            🔔
+            <Image src="/icons/notificacoes.png" alt="" width={22} height={22} />
           </button>
           <button
             type="button"
@@ -76,7 +104,12 @@ export function AppShell({ children }: AppShellProps): React.ReactNode {
             onClick={() => setTemaClaro(!temaClaro)}
             aria-pressed={temaClaro}
           >
-            {temaClaro ? "☾" : "☼"}
+            <Image
+              src={`/icons/${temaClaro ? "tema-dark" : "tema-light"}.png`}
+              alt=""
+              width={20}
+              height={20}
+            />
             <span>{temaClaro ? "Dark" : "Light"}</span>
           </button>
         </div>
@@ -114,6 +147,9 @@ export function AppShell({ children }: AppShellProps): React.ReactNode {
           </nav>
           <div className="app-sidebar-footer">
             <LogoutButton />
+            <a className="icons8-credit" href="https://icons8.com" target="_blank" rel="noreferrer">
+              Ícones por Icons8
+            </a>
           </div>
         </aside>
 

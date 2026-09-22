@@ -101,6 +101,8 @@
   border-radius: 0.4rem;
   font-size: 0.65rem;
   font-weight: 700;
+  object-fit: contain;
+  padding: 0.1rem;
 }
 .app-sidebar-footer {
   margin-top: auto;
@@ -172,6 +174,21 @@
   color: var(--muted);
   font-size: 0.75rem;
 }
+.app-legal-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.app-legal-links img {
+  object-fit: contain;
+}
+.icons8-credit {
+  display: block;
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.65rem;
+  text-align: center;
+}
 .app-legal-links a:hover {
   color: var(--foreground);
 }
@@ -184,8 +201,14 @@
   background: transparent;
 }
 .app-icon-button {
+  display: grid;
+  place-items: center;
   width: 2.35rem;
   height: 2.35rem;
+}
+.app-icon-button img,
+.app-theme-button img {
+  object-fit: contain;
 }
 .app-theme-button {
   display: flex;
