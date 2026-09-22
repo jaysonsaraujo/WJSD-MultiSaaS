@@ -16,6 +16,222 @@
   --shadow: #00000059;
 }
 
+.app-shell {
+  display: flex;
+  min-height: 100svh;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.app-shell.theme-light {
+  --background: #f7f5fb;
+  --foreground: #211b2b;
+  --surface: #ffffff;
+  --surface-raised: #f1edf8;
+  --border: #ddd5ea;
+  --muted: #70677d;
+  --shadow: #23153924;
+}
+
+.app-sidebar {
+  display: flex;
+  width: 17rem;
+  flex-shrink: 0;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 88%, var(--background));
+  padding: 1.5rem 1rem;
+}
+
+.app-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.5rem 2rem;
+}
+.app-sidebar-brand strong {
+  display: block;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+.app-sidebar-brand div span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.7rem;
+  margin-top: 0.15rem;
+}
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.app-nav-link {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.7rem;
+  color: var(--muted);
+  padding: 0.7rem 0.8rem;
+  font-size: 0.85rem;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+.app-nav-link:hover,
+.app-nav-link.is-active {
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  color: var(--foreground);
+}
+.app-nav-link.is-active {
+  box-shadow: inset 3px 0 var(--primary);
+}
+.app-nav-icon {
+  display: grid;
+  width: 1.4rem;
+  height: 1.4rem;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.app-sidebar-footer {
+  margin-top: auto;
+  padding: 1rem 0.25rem 0;
+}
+.app-sidebar-footer .flex {
+  align-items: stretch;
+}
+.app-sidebar-footer button {
+  width: 100%;
+}
+.app-main {
+  min-width: 0;
+  flex: 1;
+}
+.app-topbar {
+  display: flex;
+  min-height: 4.75rem;
+  align-items: center;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+}
+.app-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.app-top-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.app-top-brand .login-brand-mark {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.65rem;
+  font-size: 0.95rem;
+}
+.app-top-brand strong {
+  display: block;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+.app-top-brand div span {
+  display: block;
+  max-width: 14rem;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.65rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.app-breadcrumbs a {
+  color: var(--foreground);
+  font-weight: 600;
+}
+.app-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+.app-legal-links {
+  display: flex;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.app-legal-links a:hover {
+  color: var(--foreground);
+}
+.app-icon-button,
+.app-theme-button,
+.app-menu-button {
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  color: var(--muted);
+  background: transparent;
+}
+.app-icon-button {
+  width: 2.35rem;
+  height: 2.35rem;
+}
+.app-theme-button {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.75rem;
+}
+.app-content {
+  padding: 2rem;
+}
+.app-menu-button {
+  display: none;
+  width: 2.35rem;
+  height: 2.35rem;
+}
+
+@media (max-width: 900px) {
+  .app-sidebar {
+    position: fixed;
+    z-index: 20;
+    inset: 0 auto 0 0;
+    transform: translateX(-100%);
+    transition: transform 180ms ease;
+  }
+  .app-sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: 16px 0 50px var(--shadow);
+  }
+  .app-menu-button {
+    display: block;
+  }
+  .app-topbar {
+    padding: 0 1rem;
+  }
+  .app-top-brand {
+    display: none;
+  }
+  .app-legal-links {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .app-content {
+    padding: 1.25rem 1rem;
+  }
+  .app-theme-button span {
+    display: none;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
