@@ -83,20 +83,20 @@ export function AppShell({ children }: AppShellProps): React.ReactNode {
         <div className="app-top-actions">
           <nav className="app-legal-links" aria-label="Informações legais">
             <a href="#privacidade">
-              <Image src="/icons/privacidade.png" alt="" width={16} height={16} />
+              <Image src="/icons/privacidade.png" alt="" width={24} height={24} />
               Privacidade
             </a>
             <a href="#termos">
-              <Image src="/icons/termos.png" alt="" width={16} height={16} />
+              <Image src="/icons/termos.png" alt="" width={24} height={24} />
               Termos de Uso
             </a>
             <a href="#lgpd">
-              <Image src="/icons/lgpd.png" alt="" width={16} height={16} />
+              <Image src="/icons/lgpd.png" alt="" width={24} height={24} />
               LGPD
             </a>
           </nav>
           <button type="button" className="app-icon-button" aria-label="Notificações">
-            <Image src="/icons/notificacoes.png" alt="" width={22} height={22} />
+            <Image src="/icons/notificacoes.png" alt="" width={32} height={32} />
           </button>
           <button
             type="button"
@@ -107,8 +107,8 @@ export function AppShell({ children }: AppShellProps): React.ReactNode {
             <Image
               src={`/icons/${temaClaro ? "tema-dark" : "tema-light"}.png`}
               alt=""
-              width={20}
-              height={20}
+              width={28}
+              height={28}
             />
             <span>{temaClaro ? "Dark" : "Light"}</span>
           </button>

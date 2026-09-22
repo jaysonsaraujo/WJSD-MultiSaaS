@@ -159,7 +159,7 @@
 }
 .app-top-brand strong {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   letter-spacing: 0.04em;
 }
 .app-top-brand div span {
@@ -167,7 +167,7 @@
   max-width: 14rem;
   overflow: hidden;
   color: var(--muted);
-  font-size: 0.65rem;
+  font-size: 0.85rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -183,14 +183,14 @@
 }
 .app-legal-links {
   display: flex;
-  gap: 1rem;
+  gap: 0.9rem;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
 }
 .app-legal-links a {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.4rem;
 }
 .app-legal-links img {
   object-fit: contain;
@@ -216,8 +216,8 @@
 .app-icon-button {
   display: grid;
   place-items: center;
-  width: 2.35rem;
-  height: 2.35rem;
+  width: 3rem;
+  height: 3rem;
 }
 .app-icon-button img,
 .app-theme-button img {
@@ -226,9 +226,9 @@
 .app-theme-button {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.55rem 0.7rem;
-  font-size: 0.75rem;
+  gap: 0.5rem;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.85rem;
 }
 .app-content {
   padding: 2rem;
