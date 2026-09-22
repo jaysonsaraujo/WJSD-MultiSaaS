@@ -43,8 +43,8 @@ function Icon({ label }: { label: keyof typeof ICONS }): React.ReactNode {
       className="app-nav-icon"
       src={`/icons/${ICONS[label]}.png`}
       alt=""
-      width={24}
-      height={24}
+      width={48}
+      height={48}
     />
   );
 }
