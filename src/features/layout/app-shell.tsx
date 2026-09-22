@@ -116,15 +116,6 @@ export function AppShell({ children }: AppShellProps): React.ReactNode {
       </header>
       <div className="app-workspace">
         <aside className={`app-sidebar${menuAberto ? " is-open" : ""}`}>
-          <div className="app-sidebar-brand">
-            <span className="login-brand-mark" aria-hidden="true">
-              W
-            </span>
-            <div>
-              <strong>WJSD</strong>
-              <span>Sistemas e Tecnologia</span>
-            </div>
-          </div>
           <nav aria-label="Navegação principal" className="app-nav">
             {NAV_ITEMS.map(([label, href]) => {
               const ativo = href === "/" ? pathname === "/" : pathname.startsWith(href);
