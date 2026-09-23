@@ -15,6 +15,19 @@
   --accent-blue: #2563eb;
   --shadow: #00000059;
 }
+html {
+  color-scheme: dark;
+}
+html.theme-light {
+  color-scheme: light;
+  --background: #f7f5fb;
+  --foreground: #211b2b;
+  --surface: #ffffff;
+  --surface-raised: #f1edf8;
+  --border: #ddd5ea;
+  --muted: #70677d;
+  --shadow: #23153924;
+}
 
 .app-shell {
   display: flex;

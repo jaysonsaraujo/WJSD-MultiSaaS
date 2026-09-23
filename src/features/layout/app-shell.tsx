@@ -13,11 +13,15 @@ const THEME_STORAGE_KEY = "wjsd-theme";
 const THEME_CHANGE_EVENT = "wjsd-theme-change";
 
 function subscribeTheme(callback: () => void): () => void {
-  window.addEventListener("storage", callback);
-  window.addEventListener(THEME_CHANGE_EVENT, callback);
+  const notify = (): void => {
+    document.documentElement.classList.toggle("theme-light", getThemeSnapshot());
+    callback();
+  };
+  window.addEventListener("storage", notify);
+  window.addEventListener(THEME_CHANGE_EVENT, notify);
   return () => {
-    window.removeEventListener("storage", callback);
-    window.removeEventListener(THEME_CHANGE_EVENT, callback);
+    window.removeEventListener("storage", notify);
+    window.removeEventListener(THEME_CHANGE_EVENT, notify);
   };
 }
 
@@ -96,6 +100,7 @@ export function AppShell({ children }: AppShellProps): React.ReactNode {
   function alternarTema(): void {
     const proximoTema = temaClaro ? "dark" : "light";
     window.localStorage.setItem(THEME_STORAGE_KEY, proximoTema);
+    document.documentElement.classList.toggle("theme-light", proximoTema === "light");
     window.dispatchEvent(new Event(THEME_CHANGE_EVENT));
   }
 
