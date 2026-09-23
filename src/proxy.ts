@@ -31,7 +31,7 @@ export function proxy(request: NextRequest): NextResponse {
   const hasSession = request.cookies.has(SESSION_COOKIE);
 
   if (request.nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL(hasSession ? "/perfil" : "/login", request.url));
+    return NextResponse.redirect(new URL(hasSession ? "/dashboard" : "/login", request.url));
   }
 
   if (hasSession) {
@@ -45,5 +45,23 @@ export function proxy(request: NextRequest): NextResponse {
  * deixa toda rota nova sem gate por padrão, que é o erro caro.
  */
 export const config = {
-  matcher: ["/", "/perfil/:path*"],
+  matcher: [
+    "/",
+    "/dashboard/:path*",
+    "/perfil/:path*",
+    "/clientes/:path*",
+    "/planos/:path*",
+    "/pagamentos/:path*",
+    "/produtos/:path*",
+    "/modulos/:path*",
+    "/ocorrencias/:path*",
+    "/test-drive/:path*",
+    "/uso-de-recursos/:path*",
+    "/historico/:path*",
+    "/configuracoes/:path*",
+    "/privacidade/:path*",
+    "/termos-de-uso/:path*",
+    "/lgpd/:path*",
+    "/notificacoes/:path*",
+  ],
 };

@@ -10,7 +10,7 @@ import { LogoutButton } from "@/features/layout/logout-button";
 type AppShellProps = { children: React.ReactNode };
 
 const NAV_ITEMS = [
-  ["Home", "/"],
+  ["Home", "/dashboard"],
   ["Clientes", "/clientes"],
   ["Planos", "/planos"],
   ["Pagamentos", "/pagamentos"],
@@ -36,6 +36,25 @@ const ICONS = {
   Histórico: "historico",
   Configurações: "configuracoes",
 } as const;
+
+const BREADCRUMB_LABELS: Record<string, string> = {
+  "/dashboard": "Dashboard",
+  "/clientes": "Clientes",
+  "/planos": "Planos",
+  "/pagamentos": "Pagamentos",
+  "/produtos": "Produtos",
+  "/modulos": "Módulos",
+  "/ocorrencias": "Ocorrências",
+  "/test-drive": "Test-Drive",
+  "/uso-de-recursos": "Uso de Recursos",
+  "/historico": "Histórico",
+  "/configuracoes": "Configurações",
+  "/perfil": "Perfil",
+  "/privacidade": "Privacidade",
+  "/termos-de-uso": "Termos de Uso",
+  "/lgpd": "LGPD",
+  "/notificacoes": "Notificações",
+};
 
 function Icon({ label }: { label: keyof typeof ICONS }): React.ReactNode {
   return (
@@ -76,28 +95,28 @@ export function AppShell({ children }: AppShellProps): React.ReactNode {
           </div>
         </div>
         <div className="app-breadcrumbs" aria-label="Breadcrumb">
-          <Link href="/">WJSD</Link>
+          <Link href="/dashboard">WJSD</Link>
           <span aria-hidden="true">/</span>
-          <span>{pathname === "/perfil" ? "Perfil" : "Visão geral"}</span>
+          <span>{BREADCRUMB_LABELS[pathname] ?? "Dashboard"}</span>
         </div>
         <div className="app-top-actions">
           <nav className="app-legal-links" aria-label="Informações legais">
-            <a href="#privacidade">
+            <Link href="/privacidade">
               <Image src="/icons/privacidade.png" alt="" width={24} height={24} />
               Privacidade
-            </a>
-            <a href="#termos">
+            </Link>
+            <Link href="/termos-de-uso">
               <Image src="/icons/termos.png" alt="" width={24} height={24} />
               Termos de Uso
-            </a>
-            <a href="#lgpd">
+            </Link>
+            <Link href="/lgpd">
               <Image src="/icons/lgpd.png" alt="" width={24} height={24} />
               LGPD
-            </a>
+            </Link>
           </nav>
-          <button type="button" className="app-icon-button" aria-label="Notificações">
+          <Link href="/notificacoes" className="app-icon-button" aria-label="Notificações">
             <Image src="/icons/notificacoes.png" alt="" width={32} height={32} />
-          </button>
+          </Link>
           <button
             type="button"
             className="app-theme-button"
@@ -118,21 +137,17 @@ export function AppShell({ children }: AppShellProps): React.ReactNode {
         <aside className={`app-sidebar${menuAberto ? " is-open" : ""}`}>
           <nav aria-label="Navegação principal" className="app-nav">
             {NAV_ITEMS.map(([label, href]) => {
-              const ativo = href === "/" ? pathname === "/" : pathname.startsWith(href);
+              const ativo = pathname.startsWith(href);
               return (
-                <a
+                <Link
                   key={label}
                   href={href}
                   className={`app-nav-link${ativo ? " is-active" : ""}`}
-                  onClick={(event) => {
-                    if (href !== "/") event.preventDefault();
-                    setMenuAberto(false);
-                  }}
-                  title={href === "/" ? undefined : "Módulo em preparação"}
+                  onClick={() => setMenuAberto(false)}
                 >
                   <Icon label={label} />
                   <span>{label}</span>
-                </a>
+                </Link>
               );
             })}
           </nav>

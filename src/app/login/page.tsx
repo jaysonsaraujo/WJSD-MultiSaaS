@@ -2,8 +2,8 @@ import type { Route } from "next";
 
 import { LoginForm } from "@/features/auth/login-form";
 
-/** Destino padrão pós-login. Rota canônica: a área autenticada de exemplo. */
-const DESTINO_POS_LOGIN: Route = "/perfil";
+/** Destino padrão pós-login: o Dashboard da área autenticada. */
+const DESTINO_POS_LOGIN: Route = "/dashboard";
 
 /**
  * Login. O `proxy.ts` manda pra cá quem não tem cookie de sessão.
