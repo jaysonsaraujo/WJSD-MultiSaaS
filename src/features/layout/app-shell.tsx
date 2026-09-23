@@ -3,11 +3,31 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 import { LogoutButton } from "@/features/layout/logout-button";
 
 type AppShellProps = { children: React.ReactNode };
+
+const THEME_STORAGE_KEY = "wjsd-theme";
+const THEME_CHANGE_EVENT = "wjsd-theme-change";
+
+function subscribeTheme(callback: () => void): () => void {
+  window.addEventListener("storage", callback);
+  window.addEventListener(THEME_CHANGE_EVENT, callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener(THEME_CHANGE_EVENT, callback);
+  };
+}
+
+function getThemeSnapshot(): boolean {
+  return window.localStorage.getItem(THEME_STORAGE_KEY) === "light";
+}
+
+function getServerThemeSnapshot(): boolean {
+  return false;
+}
 
 const NAV_ITEMS = [
   ["Home", "/dashboard"],
@@ -71,7 +91,13 @@ function Icon({ label }: { label: keyof typeof ICONS }): React.ReactNode {
 export function AppShell({ children }: AppShellProps): React.ReactNode {
   const pathname = usePathname();
   const [menuAberto, setMenuAberto] = useState(false);
-  const [temaClaro, setTemaClaro] = useState(false);
+  const temaClaro = useSyncExternalStore(subscribeTheme, getThemeSnapshot, getServerThemeSnapshot);
+
+  function alternarTema(): void {
+    const proximoTema = temaClaro ? "dark" : "light";
+    window.localStorage.setItem(THEME_STORAGE_KEY, proximoTema);
+    window.dispatchEvent(new Event(THEME_CHANGE_EVENT));
+  }
 
   return (
     <div className={`app-shell${temaClaro ? " theme-light" : ""}`}>
@@ -120,7 +146,7 @@ export function AppShell({ children }: AppShellProps): React.ReactNode {
           <button
             type="button"
             className="app-theme-button"
-            onClick={() => setTemaClaro(!temaClaro)}
+            onClick={alternarTema}
             aria-pressed={temaClaro}
           >
             <Image
