@@ -39,6 +39,18 @@
   --shadow: #23153924;
 }
 
+/* O bootstrap no <head> aplica este estado antes da primeira pintura, evitando
+   que a preferência Light apareça inicialmente como Dark. */
+html.theme-light .app-shell {
+  --background: #f7f5fb;
+  --foreground: #211b2b;
+  --surface: #ffffff;
+  --surface-raised: #f1edf8;
+  --border: #ddd5ea;
+  --muted: #70677d;
+  --shadow: #23153924;
+}
+
 .app-sidebar {
   display: flex;
   width: 17rem;
