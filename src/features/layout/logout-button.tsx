@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { apiClient } from "@/lib/api/client";
@@ -10,7 +9,6 @@ import { kyClient } from "@/lib/api/ky.client";
 const ERRO_INESPERADO = "Não foi possível sair. Tente novamente.";
 
 export function LogoutButton(): React.ReactNode {
-  const router = useRouter();
   const [erro, setErro] = useState<string | null>(null);
   const [saindo, setSaindo] = useState(false);
 
@@ -19,8 +17,10 @@ export function LogoutButton(): React.ReactNode {
     setSaindo(true);
     try {
       await apiClient(kyClient, API_ENDPOINTS.auth.logout, undefined, { method: "post" });
-      router.replace("/login");
-      router.refresh();
+      // O logout limpa um cookie HttpOnly no domínio da aplicação. Uma
+      // navegação completa desmonta o shell atual e garante que nenhuma árvore
+      // RSC autenticada permaneça em memória após a sessão ser encerrada.
+      window.location.replace("/login");
     } catch (error: unknown) {
       setSaindo(false);
       setErro(error instanceof Error ? error.message : ERRO_INESPERADO);
