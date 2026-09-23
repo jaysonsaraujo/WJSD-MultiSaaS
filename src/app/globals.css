@@ -439,6 +439,19 @@
 .profile-primary-button:hover:not(:disabled) {
   background: var(--primary-hover);
 }
+.profile-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+.profile-cancel-button {
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  color: var(--foreground);
+}
+.profile-cancel-button:hover {
+  background: var(--surface-raised);
+}
 .profile-secondary-button {
   border: 1px solid var(--border);
   border-radius: 0.4rem;

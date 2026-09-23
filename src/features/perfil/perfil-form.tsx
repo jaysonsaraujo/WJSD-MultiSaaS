@@ -81,13 +81,22 @@ export function PerfilForm({ perfil }: PerfilFormProps): React.ReactNode {
       )}
       {salvo ? <output className="text-sm text-green-700">Perfil salvo.</output> : null}
 
-      <button
-        type="submit"
-        disabled={formState.isSubmitting}
-        className="profile-primary-button self-end px-5 py-2 text-sm font-medium disabled:opacity-60"
-      >
-        {formState.isSubmitting ? "Salvando..." : "Salvar"}
-      </button>
+      <div className="profile-form-actions">
+        <button
+          type="button"
+          className="profile-cancel-button px-5 py-2 text-sm font-medium"
+          onClick={() => form.reset()}
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          disabled={formState.isSubmitting}
+          className="profile-primary-button px-5 py-2 text-sm font-medium disabled:opacity-60"
+        >
+          {formState.isSubmitting ? "Salvando..." : "Salvar alterações"}
+        </button>
+      </div>
     </form>
   );
 }
