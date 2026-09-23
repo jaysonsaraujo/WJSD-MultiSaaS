@@ -24,9 +24,62 @@ async function PerfilCarregado(): Promise<React.ReactNode> {
   const perfil = await apiClient(kyServer, API_ENDPOINTS.perfil.me, perfilSchema);
 
   return (
-    <div className="flex flex-col gap-8">
-      <PerfilForm perfil={perfil} />
-      <SenhaForm />
+    <div className="profile-layout">
+      <aside className="profile-summary-card">
+        <h2>Informações do Perfil</h2>
+        <p className="profile-summary-subtitle">Seus dados pessoais e foto</p>
+        <div className="profile-avatar" aria-label={`Avatar de ${perfil.nome}`}>
+          {perfil.nome.slice(0, 2).toUpperCase()}
+        </div>
+        <button className="profile-outline-button" type="button" disabled>
+          Alterar foto
+        </button>
+        <button className="profile-text-button" type="button" disabled>
+          Remover foto
+        </button>
+        <small className="profile-help-text">PNG, JPG ou WEBP até 1MB.</small>
+        <dl className="profile-summary-list">
+          <div>
+            <dt>Nome de usuário</dt>
+            <dd>{perfil.nome}</dd>
+          </div>
+          <div>
+            <dt>E-mail</dt>
+            <dd>{perfil.email}</dd>
+          </div>
+          <div>
+            <dt>Telefone (WhatsApp)</dt>
+            <dd>{perfil.telefone ?? "Não informado"}</dd>
+          </div>
+          <div>
+            <dt>Função</dt>
+            <dd>Não informado</dd>
+          </div>
+          <div>
+            <dt>Membro desde</dt>
+            <dd>Não informado</dd>
+          </div>
+        </dl>
+      </aside>
+
+      <section className="profile-settings-card">
+        <header>
+          <h2>Configurações da Conta</h2>
+          <p>Atualize suas informações pessoais</p>
+        </header>
+        <PerfilForm perfil={perfil} />
+        <div className="profile-address-field">
+          <label htmlFor="perfil-endereco">Endereço</label>
+          <textarea
+            id="perfil-endereco"
+            rows={3}
+            disabled
+            placeholder="Endereço será disponibilizado na próxima versão."
+          />
+          <small>O endereço ainda não faz parte do contrato atual do backend.</small>
+        </div>
+        <SenhaForm />
+      </section>
     </div>
   );
 }
@@ -40,14 +93,10 @@ async function PerfilCarregado(): Promise<React.ReactNode> {
 export default function PerfilPage(): React.ReactNode {
   return (
     <AppShell>
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-8">
-        <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-2xl font-semibold tracking-tight">Perfil</h1>
-            <p className="text-sm text-foreground/60">
-              Leitura em Server Component, mutação em Server Action. Edite os campos e salve.
-            </p>
-          </div>
+      <div className="mx-auto flex w-full max-w-[118rem] flex-col gap-5">
+        <header className="profile-page-header">
+          <h1>Perfil do Usuário</h1>
+          <p>Atualize suas informações pessoais e preferências de segurança.</p>
         </header>
 
         <Suspense fallback={<p className="text-sm text-foreground/60">Carregando perfil...</p>}>
