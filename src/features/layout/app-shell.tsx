@@ -1,13 +1,15 @@
 import { apiClient } from "@/lib/api/client";
 import { Suspense } from "react";
+import { cookies } from "next/headers";
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import { kyServer } from "@/lib/api/ky.server";
 import {
   organizationsResponseSchema,
   type OrganizationsResponse,
 } from "@/shared/schemas/organizations.schema";
-import { OrganizationSelector } from "@/shared/ui/organization-selector";
+import { OrganizationSelector } from "@/features/layout/organization-selector";
 import { AppShellClient } from "@/features/layout/app-shell-client";
+import { ORGANIZATION_COOKIE } from "@/shared/utils/organization";
 
 type AppShellProps = { children: React.ReactNode };
 
@@ -35,7 +37,10 @@ async function AppShellWithOrganization({ children }: AppShellProps): Promise<Re
     <AppShellClient
       organizationSlot={
         organizations ? (
-          <OrganizationSelector organizations={organizations.organizacoes} />
+          <OrganizationSelector
+            organizations={organizations.organizacoes}
+            selectedId={(await cookies()).get(ORGANIZATION_COOKIE)?.value}
+          />
         ) : undefined
       }
     >

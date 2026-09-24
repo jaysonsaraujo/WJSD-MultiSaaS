@@ -3,21 +3,24 @@
 import { useState } from "react";
 
 import type { Organization } from "@/shared/schemas/organizations.schema";
-
-const STORAGE_KEY = "wjsd-organization-id";
+import { ORGANIZATION_COOKIE } from "@/shared/utils/organization";
+import { persistOrganizationSelection } from "@/features/layout/organization.actions";
 
 export function OrganizationSelector({
   organizations,
+  selectedId: initialSelectedId,
 }: {
   organizations: Organization[];
+  selectedId?: string;
 }): React.ReactNode {
-  const [selectedId, setSelectedId] = useState(organizations[0]?.id ?? "");
+  const [selectedId, setSelectedId] = useState(initialSelectedId ?? organizations[0].id);
 
   if (organizations.length === 0) return null;
 
   function selecionar(id: string): void {
     setSelectedId(id);
-    window.localStorage.setItem(STORAGE_KEY, id);
+    window.localStorage.setItem(ORGANIZATION_COOKIE, id);
+    void persistOrganizationSelection(id);
     window.dispatchEvent(new CustomEvent("wjsd-organization-change", { detail: id }));
   }
 
