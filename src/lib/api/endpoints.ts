@@ -22,4 +22,8 @@ export const API_ENDPOINTS = {
   perfil: {
     me: "api/v1/perfil",
   },
+
+  organizations: {
+    list: "api/v1/organizacoes",
+  },
 } as const;
