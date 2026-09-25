@@ -24,11 +24,16 @@ export function PlanManager({
   const [interval, setInterval] = useState<"month" | "year">("month");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   async function createPlan(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const parsedPrice = Number(price.replace(",", "."));
     if (!Number.isFinite(parsedPrice) || parsedPrice < 0) {
       setMessage("Informe um preço válido.");
+      return;
+    }
+    if (editingId) {
+      await updatePlan(editingId);
       return;
     }
     setSaving(true);
@@ -62,11 +67,81 @@ export function PlanManager({
       setSaving(false);
     }
   }
+  function startEditing(plan: Plan): void {
+    setEditingId(plan.id);
+    setName(plan.name);
+    setSlug(plan.slug);
+    setDescription(plan.description ?? "");
+    setPrice((plan.price_cents / 100).toFixed(2));
+    setInterval(plan.billing_interval);
+    setMessage("");
+  }
+  async function updatePlan(planId: string): Promise<void> {
+    const parsedPrice = Number(price.replace(",", "."));
+    if (!Number.isFinite(parsedPrice) || parsedPrice < 0) {
+      setMessage("Informe um preço válido.");
+      return;
+    }
+    setSaving(true);
+    setMessage("");
+    try {
+      const response = await apiClient(
+        kyClient,
+        `${API_ENDPOINTS.organizations.plans(organizationId)}/${planId}`,
+        planResponseSchema,
+        {
+          method: "patch",
+          json: {
+            nome: name,
+            slug: slug || undefined,
+            descricao: description || null,
+            precoCentavos: Math.round(parsedPrice * 100),
+            intervalo: interval,
+          },
+        },
+      );
+      setPlans((current) => current.map((plan) => (plan.id === planId ? response.plano : plan)));
+      resetForm();
+      setMessage("Plano atualizado com sucesso.");
+    } catch (error: unknown) {
+      setMessage(error instanceof Error ? error.message : "Não foi possível atualizar o plano.");
+    } finally {
+      setSaving(false);
+    }
+  }
+  async function removePlan(planId: string): Promise<void> {
+    if (!window.confirm("Remover este plano?")) return;
+    setSaving(true);
+    setMessage("");
+    try {
+      await apiClient(
+        kyClient,
+        `${API_ENDPOINTS.organizations.plans(organizationId)}/${planId}`,
+        undefined,
+        { method: "delete" },
+      );
+      setPlans((current) => current.filter((plan) => plan.id !== planId));
+      if (editingId === planId) resetForm();
+      setMessage("Plano removido com sucesso.");
+    } catch (error: unknown) {
+      setMessage(error instanceof Error ? error.message : "Não foi possível remover o plano.");
+    } finally {
+      setSaving(false);
+    }
+  }
+  function resetForm(): void {
+    setEditingId(null);
+    setName("");
+    setSlug("");
+    setDescription("");
+    setPrice("");
+    setInterval("month");
+  }
   return (
     <>
       <form className="app-development-card flex flex-col gap-4" onSubmit={createPlan}>
-        <span className="app-development-status">Novo plano</span>
-        <h2 className="text-xl font-semibold">Cadastrar plano</h2>
+        <span className="app-development-status">{editingId ? "Editar plano" : "Novo plano"}</span>
+        <h2 className="text-xl font-semibold">{editingId ? "Atualizar plano" : "Cadastrar plano"}</h2>
         <label className="flex flex-col gap-2 text-sm">
           Nome
           <input
@@ -129,7 +204,7 @@ export function PlanManager({
           disabled={saving}
           type="submit"
         >
-          {saving ? "Salvando..." : "Cadastrar plano"}
+          {saving ? "Salvando..." : editingId ? "Atualizar plano" : "Cadastrar plano"}
         </button>
         {message ? <output className="text-sm text-foreground/70">{message}</output> : null}
       </form>
@@ -151,6 +226,19 @@ export function PlanManager({
                 </small>
                 {plan.description ? <span>{plan.description}</span> : null}
                 <span>{plan.status === "active" ? "Ativo" : "Inativo"}</span>
+                <span className="mt-2 flex gap-2">
+                  <button className="app-secondary-button" type="button" onClick={() => startEditing(plan)}>
+                    Editar
+                  </button>
+                  <button
+                    className="app-secondary-button"
+                    type="button"
+                    disabled={saving}
+                    onClick={() => void removePlan(plan.id)}
+                  >
+                    Remover
+                  </button>
+                </span>
               </li>
             ))}
           </ul>
