@@ -6,3 +6,5 @@ tsconfig.tsbuildinfo
 !.env.example
 stacksenior-review-cycle
 designUI-UX
+*.tar
+*.part.*
