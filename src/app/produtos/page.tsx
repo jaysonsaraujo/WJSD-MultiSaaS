@@ -2,6 +2,7 @@ import Image from "next/image";
 import { cookies } from "next/headers";
 
 import { AppShell } from "@/features/layout/app-shell";
+import { ProductManager } from "@/features/products/product-manager";
 import { apiClient } from "@/lib/api/client";
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import { kyServer } from "@/lib/api/ky.server";
@@ -35,26 +36,15 @@ export default async function ProdutosPage(): Promise<React.ReactNode> {
             </p>
           </div>
         </header>
-        <section className="app-development-card">
-          <span className="app-development-status">Dados reais</span>
-          <h2 className="mt-3 text-xl font-semibold">Produtos cadastrados</h2>
-          {products.length === 0 ? (
-            <p className="mt-2 text-sm leading-6 text-foreground/60">
-              Nenhum produto cadastrado nesta organização. O cadastro será habilitado na próxima
-              etapa.
+        {organizationId ? (
+          <ProductManager organizationId={organizationId} initialProducts={products} />
+        ) : (
+          <section className="app-development-card">
+            <p className="text-sm text-foreground/60">
+              Selecione uma organização para gerenciar produtos.
             </p>
-          ) : (
-            <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-              {products.map((product) => (
-                <li className="app-dashboard-module" key={product.id}>
-                  <strong>{product.name}</strong>
-                  <small>{product.status === "active" ? "Ativo" : "Inativo"}</small>
-                  {product.description ? <span>{product.description}</span> : null}
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+          </section>
+        )}
       </div>
     </AppShell>
   );
