@@ -26,5 +26,6 @@ export const API_ENDPOINTS = {
   organizations: {
     list: "api/v1/organizacoes",
     products: (organizationId: string) => `api/v1/organizacoes/${organizationId}/produtos`,
+    plans: (organizationId: string) => `api/v1/organizacoes/${organizationId}/planos`,
   },
 } as const;
