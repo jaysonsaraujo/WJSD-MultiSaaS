@@ -21,9 +21,14 @@ export function ProductManager({
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   async function createProduct(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
+    if (editingId) {
+      await updateProduct(editingId);
+      return;
+    }
     setSaving(true);
     setMessage("");
     try {
@@ -47,11 +52,65 @@ export function ProductManager({
     }
   }
 
+  function iniciarEdicao(product: Product): void {
+    setEditingId(product.id);
+    setName(product.name);
+    setDescription(product.description ?? "");
+    setMessage("");
+  }
+
+  async function updateProduct(productId: string): Promise<void> {
+    setSaving(true);
+    setMessage("");
+    try {
+      const response = await apiClient(
+        kyClient,
+        `${API_ENDPOINTS.organizations.products(organizationId)}/${productId}`,
+        productResponseSchema,
+        { method: "patch", json: { nome: name, descricao: description || null } },
+      );
+      setProducts((current) =>
+        current.map((product) => (product.id === productId ? response.produto : product)),
+      );
+      setEditingId(null);
+      setName("");
+      setDescription("");
+      setMessage("Produto atualizado com sucesso.");
+    } catch (error: unknown) {
+      setMessage(error instanceof Error ? error.message : "Não foi possível atualizar o produto.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function removeProduct(productId: string): Promise<void> {
+    if (!window.confirm("Remover este produto?")) return;
+    setSaving(true);
+    try {
+      await apiClient(
+        kyClient,
+        `${API_ENDPOINTS.organizations.products(organizationId)}/${productId}`,
+        undefined,
+        { method: "delete" },
+      );
+      setProducts((current) => current.filter((product) => product.id !== productId));
+      setMessage("Produto removido com sucesso.");
+    } catch (error: unknown) {
+      setMessage(error instanceof Error ? error.message : "Não foi possível remover o produto.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <>
       <form className="app-development-card flex flex-col gap-4" onSubmit={createProduct}>
-        <span className="app-development-status">Novo produto</span>
-        <h2 className="text-xl font-semibold">Cadastrar produto</h2>
+        <span className="app-development-status">
+          {editingId ? "Editar produto" : "Novo produto"}
+        </span>
+        <h2 className="text-xl font-semibold">
+          {editingId ? "Atualizar produto" : "Cadastrar produto"}
+        </h2>
         <label className="flex flex-col gap-2 text-sm">
           Nome
           <input
@@ -74,7 +133,7 @@ export function ProductManager({
           disabled={saving}
           type="submit"
         >
-          {saving ? "Salvando..." : "Cadastrar produto"}
+          {saving ? "Salvando..." : editingId ? "Atualizar produto" : "Cadastrar produto"}
         </button>
         {message ? <output className="text-sm text-foreground/70">{message}</output> : null}
       </form>
@@ -92,6 +151,22 @@ export function ProductManager({
                 <strong>{product.name}</strong>
                 <small>{product.status === "active" ? "Ativo" : "Inativo"}</small>
                 {product.description ? <span>{product.description}</span> : null}
+                <span className="mt-2 flex gap-2">
+                  <button
+                    className="app-secondary-button"
+                    type="button"
+                    onClick={() => iniciarEdicao(product)}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="app-secondary-button"
+                    type="button"
+                    onClick={() => void removeProduct(product.id)}
+                  >
+                    Remover
+                  </button>
+                </span>
               </li>
             ))}
           </ul>
