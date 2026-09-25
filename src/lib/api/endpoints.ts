@@ -29,5 +29,6 @@ export const API_ENDPOINTS = {
     plans: (organizationId: string) => `api/v1/organizacoes/${organizationId}/planos`,
     clients: (organizationId: string) => `api/v1/organizacoes/${organizationId}/clientes`,
     payments: (organizationId: string) => `api/v1/organizacoes/${organizationId}/pagamentos`,
+    modules: (organizationId: string) => `api/v1/organizacoes/${organizationId}/modulos`,
   },
 } as const;
