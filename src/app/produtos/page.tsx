@@ -8,6 +8,8 @@ import { kyServer } from "@/lib/api/ky.server";
 import { productsResponseSchema, type ProductsResponse } from "@/shared/schemas/products.schema";
 import { ORGANIZATION_COOKIE } from "@/shared/utils/organization";
 
+export const instant = false;
+
 export default async function ProdutosPage(): Promise<React.ReactNode> {
   const organizationId = (await cookies()).get(ORGANIZATION_COOKIE)?.value;
   const products = organizationId ? await loadProducts(organizationId) : [];
