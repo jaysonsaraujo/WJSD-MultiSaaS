@@ -141,7 +141,9 @@ export function PlanManager({
     <>
       <form className="app-development-card flex flex-col gap-4" onSubmit={createPlan}>
         <span className="app-development-status">{editingId ? "Editar plano" : "Novo plano"}</span>
-        <h2 className="text-xl font-semibold">{editingId ? "Atualizar plano" : "Cadastrar plano"}</h2>
+        <h2 className="text-xl font-semibold">
+          {editingId ? "Atualizar plano" : "Cadastrar plano"}
+        </h2>
         <label className="flex flex-col gap-2 text-sm">
           Nome
           <input
@@ -227,7 +229,11 @@ export function PlanManager({
                 {plan.description ? <span>{plan.description}</span> : null}
                 <span>{plan.status === "active" ? "Ativo" : "Inativo"}</span>
                 <span className="mt-2 flex gap-2">
-                  <button className="app-secondary-button" type="button" onClick={() => startEditing(plan)}>
+                  <button
+                    className="app-secondary-button"
+                    type="button"
+                    onClick={() => startEditing(plan)}
+                  >
                     Editar
                   </button>
                   <button
