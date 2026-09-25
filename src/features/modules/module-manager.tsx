@@ -5,15 +5,25 @@ import { apiClient } from "@/lib/api/client";
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import { kyClient } from "@/lib/api/ky.client";
 import { moduleResponseSchema, type ModulesResponse } from "@/shared/schemas/modules.schema";
+import { ModuleAssociations } from "@/features/modules/module-associations";
+import type { ProductsResponse } from "@/shared/schemas/products.schema";
+import type { PlansResponse } from "@/shared/schemas/plans.schema";
+import type { ModuleAssociations as ModuleAssociationsData } from "@/shared/schemas/module-associations.schema";
 
 type Module = ModulesResponse["modulos"][number];
 
 export function ModuleManager({
   organizationId,
   initialModules,
+  products,
+  plans,
+  initialAssociations,
 }: {
   organizationId: string;
   initialModules: Module[];
+  products: ProductsResponse["produtos"];
+  plans: PlansResponse["planos"];
+  initialAssociations: Record<string, ModuleAssociationsData>;
 }): React.ReactNode {
   const [modules, setModules] = useState(initialModules);
   const [name, setName] = useState("");
@@ -24,6 +34,7 @@ export function ModuleManager({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [associationModuleId, setAssociationModuleId] = useState<string | null>(null);
   async function submit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const ordem = Number(sortOrder);
@@ -205,7 +216,27 @@ export function ModuleManager({
                     >
                       Remover
                     </button>
+                    <button
+                      className="app-secondary-button"
+                      type="button"
+                      onClick={() =>
+                        setAssociationModuleId((current) => (current === item.id ? null : item.id))
+                      }
+                    >
+                      {associationModuleId === item.id ? "Fechar associações" : "Associar"}
+                    </button>
                   </span>
+                  {associationModuleId === item.id ? (
+                    <ModuleAssociations
+                      organizationId={organizationId}
+                      moduleId={item.id}
+                      products={products}
+                      plans={plans}
+                      initialAssociations={
+                        initialAssociations[item.id] ?? { produtos: [], planos: [] }
+                      }
+                    />
+                  ) : null}
                 </li>
               ))}
           </ul>
