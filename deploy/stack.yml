@@ -1,6 +1,6 @@
 services:
   web:
-    image: wjsd-multisaas-web:4f57b18
+    image: wjsd-multisaas-web:f437863
     environment:
       NODE_ENV: production
       PORT: "3000"
