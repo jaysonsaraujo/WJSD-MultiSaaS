@@ -37,5 +37,6 @@ export const API_ENDPOINTS = {
     moduleUsage: (organizationId: string, moduleId: string) =>
       `api/v1/organizacoes/${organizationId}/modulos/${moduleId}/uso`,
     usageEvents: (organizationId: string) => `api/v1/organizacoes/${organizationId}/uso-eventos`,
+    occurrences: (organizationId: string) => `api/v1/organizacoes/${organizationId}/ocorrencias`,
   },
 } as const;
