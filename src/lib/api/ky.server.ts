@@ -2,6 +2,7 @@ import ky from "ky";
 import { cookies } from "next/headers";
 
 import { serverEnv } from "@/lib/env";
+import { ORGANIZATION_COOKIE } from "@/shared/utils/organization";
 
 /**
  * Instância ky para leituras de dado em Server Components e Server Actions.
@@ -30,6 +31,8 @@ export const kyServer = ky.create({
         if (cookieHeader) {
           request.headers.set("cookie", cookieHeader);
         }
+        const organizationId = (await cookies()).get(ORGANIZATION_COOKIE)?.value;
+        if (organizationId) request.headers.set("X-Organization-Id", organizationId);
       },
     ],
   },
