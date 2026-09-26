@@ -9,6 +9,8 @@ import { ModuleAssociations } from "@/features/modules/module-associations";
 import type { ProductsResponse } from "@/shared/schemas/products.schema";
 import type { PlansResponse } from "@/shared/schemas/plans.schema";
 import type { ModuleAssociations as ModuleAssociationsData } from "@/shared/schemas/module-associations.schema";
+import { ModuleLimits } from "@/features/modules/module-limits";
+import type { ModuleLimit } from "@/shared/schemas/module-limits.schema";
 
 type Module = ModulesResponse["modulos"][number];
 
@@ -18,12 +20,14 @@ export function ModuleManager({
   products,
   plans,
   initialAssociations,
+  initialLimits,
 }: {
   organizationId: string;
   initialModules: Module[];
   products: ProductsResponse["produtos"];
   plans: PlansResponse["planos"];
   initialAssociations: Record<string, ModuleAssociationsData>;
+  initialLimits: Record<string, ModuleLimit[]>;
 }): React.ReactNode {
   const [modules, setModules] = useState(initialModules);
   const [name, setName] = useState("");
@@ -35,6 +39,7 @@ export function ModuleManager({
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const [associationModuleId, setAssociationModuleId] = useState<string | null>(null);
+  const [limitsModuleId, setLimitsModuleId] = useState<string | null>(null);
   async function submit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const ordem = Number(sortOrder);
@@ -211,6 +216,13 @@ export function ModuleManager({
                     <button
                       className="app-secondary-button"
                       type="button"
+                      onClick={() => setLimitsModuleId((current) => (current === item.id ? null : item.id))}
+                    >
+                      {limitsModuleId === item.id ? "Fechar limites" : "Limites"}
+                    </button>
+                    <button
+                      className="app-secondary-button"
+                      type="button"
                       disabled={saving}
                       onClick={() => void removeModule(item.id)}
                     >
@@ -235,6 +247,14 @@ export function ModuleManager({
                       initialAssociations={
                         initialAssociations[item.id] ?? { produtos: [], planos: [] }
                       }
+                    />
+                  ) : null}
+                  {limitsModuleId === item.id ? (
+                    <ModuleLimits
+                      organizationId={organizationId}
+                      moduleId={item.id}
+                      plans={plans}
+                      initialLimits={initialLimits[item.id] ?? []}
                     />
                   ) : null}
                 </li>
