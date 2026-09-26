@@ -34,5 +34,8 @@ export const API_ENDPOINTS = {
       `api/v1/organizacoes/${organizationId}/modulos/${moduleId}/associacoes`,
     moduleLimits: (organizationId: string, moduleId: string) =>
       `api/v1/organizacoes/${organizationId}/modulos/${moduleId}/limites`,
+    moduleUsage: (organizationId: string, moduleId: string) =>
+      `api/v1/organizacoes/${organizationId}/modulos/${moduleId}/uso`,
+    usageEvents: (organizationId: string) => `api/v1/organizacoes/${organizationId}/uso-eventos`,
   },
 } as const;
