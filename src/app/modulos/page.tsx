@@ -13,7 +13,10 @@ import {
   type ModuleAssociations,
 } from "@/shared/schemas/module-associations.schema";
 import { ORGANIZATION_COOKIE } from "@/shared/utils/organization";
-import { moduleLimitsResponseSchema, type ModuleLimit } from "@/shared/schemas/module-limits.schema";
+import {
+  moduleLimitsResponseSchema,
+  type ModuleLimit,
+} from "@/shared/schemas/module-limits.schema";
 
 export const instant = false;
 export default async function ModulosPage(): Promise<React.ReactNode> {
@@ -81,14 +84,24 @@ async function loadModuleData(organizationId: string): Promise<{
     ),
   );
   const limits = Object.fromEntries(
-    await Promise.all(modules.map(async (module) => [module.id, await loadLimits(organizationId, module.id)] as const)),
+    await Promise.all(
+      modules.map(
+        async (module) => [module.id, await loadLimits(organizationId, module.id)] as const,
+      ),
+    ),
   );
   return { modules, products, plans, associations, limits };
 }
 
 async function loadLimits(organizationId: string, moduleId: string): Promise<ModuleLimit[]> {
   try {
-    return (await apiClient(kyServer, API_ENDPOINTS.organizations.moduleLimits(organizationId, moduleId), moduleLimitsResponseSchema)).limites;
+    return (
+      await apiClient(
+        kyServer,
+        API_ENDPOINTS.organizations.moduleLimits(organizationId, moduleId),
+        moduleLimitsResponseSchema,
+      )
+    ).limites;
   } catch {
     return [];
   }

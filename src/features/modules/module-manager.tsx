@@ -216,7 +216,9 @@ export function ModuleManager({
                     <button
                       className="app-secondary-button"
                       type="button"
-                      onClick={() => setLimitsModuleId((current) => (current === item.id ? null : item.id))}
+                      onClick={() =>
+                        setLimitsModuleId((current) => (current === item.id ? null : item.id))
+                      }
                     >
                       {limitsModuleId === item.id ? "Fechar limites" : "Limites"}
                     </button>

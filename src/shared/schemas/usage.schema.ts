@@ -25,4 +25,3 @@ const usageEventSchema = object({
 export const usageResponseSchema = object({ uso: array(usageSummarySchema) });
 export const usageEventResponseSchema = object({ evento: usageEventSchema });
 export type UsageSummary = InferOutput<typeof usageSummarySchema>;
-export type UsageEvent = InferOutput<typeof usageEventSchema>;

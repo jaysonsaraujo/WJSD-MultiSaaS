@@ -19,15 +19,25 @@ const ROOT = process.cwd();
 /** Casa o executável `node` como comando (início, ou após && | ; ou espaço). */
 const NODE_CMD = /(^|[\s&|;])node(\s|$)/;
 
+function packageJsonPaths(directory: string): string[] {
+  const files: string[] = [];
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (entry.name === "node_modules" || entry.name === ".git") continue;
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...packageJsonPaths(path));
+    } else if (entry.name === "package.json") {
+      files.push(path);
+    }
+  }
+  return files;
+}
+
 describe("guardrail: sem runtime Node", () => {
   test("nenhum script de QUALQUER package.json invoca node", () => {
-    // Varre todos os package.json do repo (não só a raiz): exclui node_modules.
-    const pkgFiles = [...new Bun.Glob("**/package.json").scanSync({ cwd: ROOT })].filter(
-      (p) => !p.includes("node_modules"),
-    );
     const offenders: string[] = [];
-    for (const file of pkgFiles) {
-      const pkg = JSON.parse(readFileSync(join(ROOT, file), "utf8")) as {
+    for (const file of packageJsonPaths(ROOT)) {
+      const pkg = JSON.parse(readFileSync(file, "utf8")) as {
         scripts?: Record<string, string>;
       };
       for (const [name, cmd] of Object.entries(pkg.scripts ?? {})) {

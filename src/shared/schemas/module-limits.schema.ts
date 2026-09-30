@@ -15,4 +15,3 @@ const moduleLimitSchema = object({
 export const moduleLimitsResponseSchema = object({ limites: array(moduleLimitSchema) });
 export const moduleLimitsSaveResponseSchema = object({ limites: array(moduleLimitSchema) });
 export type ModuleLimit = InferOutput<typeof moduleLimitSchema>;
-export type ModuleLimitsResponse = InferOutput<typeof moduleLimitsResponseSchema>;

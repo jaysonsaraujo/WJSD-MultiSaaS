@@ -12,6 +12,20 @@ import type { PlansResponse } from "@/shared/schemas/plans.schema";
 
 type Plan = PlansResponse["planos"][number];
 type LimitDraft = Pick<ModuleLimit, "plan_id" | "metric_key" | "limit_value" | "unit">;
+type LimitRow = LimitDraft & { key: string };
+
+function rowsFromLimits(limits: ModuleLimit[]): LimitRow[] {
+  return limits.map((limit) => {
+    const row: LimitRow = {
+      key: limit.id,
+      plan_id: limit.plan_id,
+      metric_key: limit.metric_key,
+      limit_value: limit.limit_value,
+      unit: limit.unit,
+    };
+    return row;
+  });
+}
 
 export function ModuleLimits({
   organizationId,
@@ -24,7 +38,7 @@ export function ModuleLimits({
   plans: Plan[];
   initialLimits: ModuleLimit[];
 }): React.ReactNode {
-  const [limits, setLimits] = useState<LimitDraft[]>(() => initialLimits.map(toDraft));
+  const [limits, setLimits] = useState<LimitRow[]>(() => rowsFromLimits(initialLimits));
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -40,7 +54,15 @@ export function ModuleLimits({
   }
 
   async function save(): Promise<void> {
-    if (limits.some((item) => !item.metric_key.trim() || !item.unit.trim() || !Number.isFinite(item.limit_value) || item.limit_value < 0)) {
+    if (
+      limits.some(
+        (item) =>
+          !item.metric_key.trim() ||
+          !item.unit.trim() ||
+          !Number.isFinite(item.limit_value) ||
+          item.limit_value < 0,
+      )
+    ) {
       setMessage("Preencha métrica, unidade e um limite válido em todas as linhas.");
       return;
     }
@@ -51,9 +73,12 @@ export function ModuleLimits({
         kyClient,
         API_ENDPOINTS.organizations.moduleLimits(organizationId, moduleId),
         moduleLimitsSaveResponseSchema,
-        { method: "put", json: { limites: limits } },
+        {
+          method: "put",
+          json: { limites: limits.map(({ key: _key, ...payload }) => payload) },
+        },
       );
-      setLimits(response.limites.map(toDraft));
+      setLimits(rowsFromLimits(response.limites));
       setMessage("Limites salvos com sucesso.");
     } catch (error: unknown) {
       setMessage(error instanceof Error ? error.message : "Não foi possível salvar os limites.");
@@ -70,27 +95,86 @@ export function ModuleLimits({
       </p>
       <div className="mt-3 grid gap-3">
         {limits.map((limit, index) => (
-          <div className="grid gap-2 rounded-xl border border-white/10 p-3 md:grid-cols-[1.2fr_1fr_1fr_1fr_auto]" key={`${moduleId}-${index}`}>
-            <input className="login-input w-full px-3 text-sm outline-none" placeholder="Métrica (ex.: usuários)" value={limit.metric_key} onChange={(event) => update(index, "metric_key", event.target.value)} />
-            <input className="login-input w-full px-3 text-sm outline-none" type="number" min="0" step="1" placeholder="Limite" value={String(limit.limit_value)} onChange={(event) => update(index, "limit_value", event.target.value)} />
-            <input className="login-input w-full px-3 text-sm outline-none" placeholder="Unidade (ex.: mês)" value={limit.unit} onChange={(event) => update(index, "unit", event.target.value)} />
-            <select className="login-input w-full px-3 text-sm outline-none" value={limit.plan_id ?? ""} onChange={(event) => update(index, "plan_id", event.target.value)}>
+          <div
+            className="grid gap-2 rounded-xl border border-white/10 p-3 md:grid-cols-[1.2fr_1fr_1fr_1fr_auto]"
+            key={limit.key}
+          >
+            <input
+              className="login-input w-full px-3 text-sm outline-none"
+              placeholder="Métrica (ex.: usuários)"
+              value={limit.metric_key}
+              onChange={(event) => update(index, "metric_key", event.target.value)}
+            />
+            <input
+              className="login-input w-full px-3 text-sm outline-none"
+              type="number"
+              min="0"
+              step="1"
+              placeholder="Limite"
+              value={String(limit.limit_value)}
+              onChange={(event) => update(index, "limit_value", event.target.value)}
+            />
+            <input
+              className="login-input w-full px-3 text-sm outline-none"
+              placeholder="Unidade (ex.: mês)"
+              value={limit.unit}
+              onChange={(event) => update(index, "unit", event.target.value)}
+            />
+            <select
+              className="login-input w-full px-3 text-sm outline-none"
+              value={limit.plan_id ?? ""}
+              onChange={(event) => update(index, "plan_id", event.target.value)}
+            >
               <option value="">Todos os planos</option>
-              {plans.map((plan) => <option key={plan.id} value={plan.id}>{plan.name}</option>)}
+              {plans.map((plan) => (
+                <option key={plan.id} value={plan.id}>
+                  {plan.name}
+                </option>
+              ))}
             </select>
-            <button className="app-secondary-button" type="button" onClick={() => setLimits((current) => current.filter((_, itemIndex) => itemIndex !== index))}>Remover</button>
+            <button
+              className="app-secondary-button"
+              type="button"
+              onClick={() =>
+                setLimits((current) => current.filter((_, itemIndex) => itemIndex !== index))
+              }
+            >
+              Remover
+            </button>
           </div>
         ))}
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
-        <button className="app-secondary-button" type="button" onClick={() => setLimits((current) => [...current, { metric_key: "", limit_value: 0, unit: "", plan_id: null }])}>Adicionar limite</button>
-        <button className="app-secondary-button" type="button" disabled={saving} onClick={() => void save()}>{saving ? "Salvando..." : "Salvar limites"}</button>
+        <button
+          className="app-secondary-button"
+          type="button"
+          onClick={() =>
+            setLimits((current) => [
+              ...current,
+              {
+                key: crypto.randomUUID(),
+                metric_key: "",
+                limit_value: 0,
+                unit: "",
+                plan_id: null,
+              },
+            ])
+          }
+        >
+          Adicionar limite
+        </button>
+        <button
+          className="app-secondary-button"
+          type="button"
+          disabled={saving}
+          onClick={() => void save()}
+        >
+          {saving ? "Salvando..." : "Salvar limites"}
+        </button>
       </div>
-      {message ? <output className="mt-2 block text-xs text-foreground/70">{message}</output> : null}
+      {message ? (
+        <output className="mt-2 block text-xs text-foreground/70">{message}</output>
+      ) : null}
     </div>
   );
-}
-
-function toDraft(limit: ModuleLimit): LimitDraft {
-  return { plan_id: limit.plan_id, metric_key: limit.metric_key, limit_value: limit.limit_value, unit: limit.unit };
 }
