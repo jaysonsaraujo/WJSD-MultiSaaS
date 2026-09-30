@@ -9,6 +9,7 @@ import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import { kyServer } from "@/lib/api/ky.server";
 
 const MODULES = [
+  ["Equipe", "/equipe", "equipe"],
   ["Clientes", "/clientes", "clientes"],
   ["Planos", "/planos", "planos"],
   ["Pagamentos", "/pagamentos", "pagamentos"],

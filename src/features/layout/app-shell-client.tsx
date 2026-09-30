@@ -35,6 +35,7 @@ function getServerThemeSnapshot(): boolean {
 
 const NAV_ITEMS = [
   ["Home", "/dashboard"],
+  ["Equipe", "/equipe"],
   ["Clientes", "/clientes"],
   ["Planos", "/planos"],
   ["Pagamentos", "/pagamentos"],
@@ -49,6 +50,7 @@ const NAV_ITEMS = [
 
 const ICONS = {
   Home: "home",
+  Equipe: "equipe",
   Clientes: "clientes",
   Planos: "planos",
   Pagamentos: "pagamentos",
@@ -63,6 +65,7 @@ const ICONS = {
 
 const BREADCRUMB_LABELS: Record<string, string> = {
   "/dashboard": "Dashboard",
+  "/equipe": "Equipe",
   "/clientes": "Clientes",
   "/planos": "Planos",
   "/pagamentos": "Pagamentos",

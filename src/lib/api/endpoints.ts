@@ -38,5 +38,9 @@ export const API_ENDPOINTS = {
       `api/v1/organizacoes/${organizationId}/modulos/${moduleId}/uso`,
     usageEvents: (organizationId: string) => `api/v1/organizacoes/${organizationId}/uso-eventos`,
     occurrences: (organizationId: string) => `api/v1/organizacoes/${organizationId}/ocorrencias`,
+    members: (organizationId: string) => `api/v1/organizacoes/${organizationId}/membros`,
+    member: (organizationId: string, memberId: string) =>
+      `api/v1/organizacoes/${organizationId}/membros/${memberId}`,
+    invites: (organizationId: string) => `api/v1/organizacoes/${organizationId}/convites`,
   },
 } as const;
