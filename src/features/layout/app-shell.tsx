@@ -33,13 +33,16 @@ async function AppShellWithOrganization({ children }: AppShellProps): Promise<Re
     organizations = undefined;
   }
 
+  const selectedOrganizationId = (await cookies()).get(ORGANIZATION_COOKIE)?.value;
+
   return (
     <AppShellClient
       organizationSlot={
         organizations ? (
           <OrganizationSelector
+            key={selectedOrganizationId}
             organizations={organizations.organizacoes}
-            selectedId={(await cookies()).get(ORGANIZATION_COOKIE)?.value}
+            selectedId={selectedOrganizationId}
           />
         ) : undefined
       }

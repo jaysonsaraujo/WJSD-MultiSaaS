@@ -13,9 +13,13 @@ export function OrganizationSelector({
   organizations: Organization[];
   selectedId?: string;
 }): React.ReactNode {
-  const [selectedId, setSelectedId] = useState(initialSelectedId ?? organizations[0].id);
+  const selectable = organizations.filter(
+    (organization) => organization.membership_status === "active",
+  );
+  const cookieSelection = selectable.find((organization) => organization.id === initialSelectedId);
+  const [selectedId, setSelectedId] = useState(cookieSelection?.id ?? selectable.at(0)?.id);
 
-  if (organizations.length === 0) return null;
+  if (selectedId === undefined) return null;
 
   function selecionar(id: string): void {
     setSelectedId(id);
@@ -32,7 +36,7 @@ export function OrganizationSelector({
         value={selectedId}
         onChange={(event) => selecionar(event.target.value)}
       >
-        {organizations.map((organization) => (
+        {selectable.map((organization) => (
           <option key={organization.id} value={organization.id}>
             {organization.name}
           </option>

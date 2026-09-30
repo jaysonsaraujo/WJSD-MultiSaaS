@@ -14,6 +14,7 @@ const MODULES = [
   ["Planos", "/planos", "planos"],
   ["Pagamentos", "/pagamentos", "pagamentos"],
   ["Produtos", "/produtos", "produtos"],
+  ["Configurações", "/configuracoes", "configuracoes"],
 ] as const;
 
 export default function DashboardRoute(): React.ReactNode {
@@ -41,8 +42,8 @@ async function DashboardContent(): Promise<React.ReactNode> {
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">Olá, {perfil.nome}</h1>
         <p className="max-w-2xl text-sm leading-6 text-foreground/60">
-          Este é o centro de controle do seu MultiSaaS. Os módulos abaixo serão alimentados pelos
-          dados reais do seu ambiente à medida que cada contrato for concluído.
+          Este é o centro de controle do seu MultiSaaS. Os módulos abaixo usam os dados reais da
+          organização selecionada.
         </p>
       </header>
 
@@ -64,17 +65,16 @@ async function DashboardContent(): Promise<React.ReactNode> {
           <Link className="app-dashboard-module" href={href} key={href}>
             <Image src={`/icons/${icon}.png`} alt="" width={48} height={48} />
             <span>{label}</span>
-            <small>Em desenvolvimento</small>
+            <small>Disponível</small>
           </Link>
         ))}
       </section>
 
       <section className="app-development-card">
         <span className="app-development-status">Próxima etapa</span>
-        <h2 className="mt-3 text-xl font-semibold">Base comercial em construção</h2>
+        <h2 className="mt-3 text-xl font-semibold">Ainda em aberto</h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/60">
-          O backend ainda precisa dos contratos de organizações, planos, assinaturas, pagamentos,
-          uso de recursos e notificações para liberar indicadores operacionais sem dados fictícios.
+          Test-Drive, Histórico e notificações continuam aguardando contrato no backend.
         </p>
       </section>
     </>
