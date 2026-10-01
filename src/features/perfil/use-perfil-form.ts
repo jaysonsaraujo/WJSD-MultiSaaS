@@ -36,7 +36,7 @@ export function usePerfilForm(perfil: Perfil): UsePerfilForm {
 
   const form = useForm<PerfilFormInput>({
     resolver: valibotResolver(perfilFormSchema),
-    defaultValues: { nome: perfil.nome, email: perfil.email },
+    defaultValues: { nome: perfil.nome, email: perfil.email, telefone: perfil.telefone },
   });
 
   const enviar = form.handleSubmit(async (valores) => {

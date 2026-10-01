@@ -14,11 +14,41 @@ export const API_ENDPOINTS = {
   /** Sessão do usuário. Chamado browser-direct: o backend emite o cookie. */
   auth: {
     login: "api/v1/login",
+    logout: "api/v1/logout",
     senha: "api/v1/senha",
   },
 
   /** Perfil do usuário autenticado — a feature de exemplo do boilerplate. */
   perfil: {
     me: "api/v1/perfil",
+  },
+
+  organizations: {
+    list: "api/v1/organizacoes",
+    products: (organizationId: string) => `api/v1/organizacoes/${organizationId}/produtos`,
+    plans: (organizationId: string) => `api/v1/organizacoes/${organizationId}/planos`,
+    clients: (organizationId: string) => `api/v1/organizacoes/${organizationId}/clientes`,
+    payments: (organizationId: string) => `api/v1/organizacoes/${organizationId}/pagamentos`,
+    modules: (organizationId: string) => `api/v1/organizacoes/${organizationId}/modulos`,
+    moduleAssociations: (organizationId: string, moduleId: string) =>
+      `api/v1/organizacoes/${organizationId}/modulos/${moduleId}/associacoes`,
+    moduleLimits: (organizationId: string, moduleId: string) =>
+      `api/v1/organizacoes/${organizationId}/modulos/${moduleId}/limites`,
+    moduleUsage: (organizationId: string, moduleId: string) =>
+      `api/v1/organizacoes/${organizationId}/modulos/${moduleId}/uso`,
+    usageEvents: (organizationId: string) => `api/v1/organizacoes/${organizationId}/uso-eventos`,
+    occurrences: (organizationId: string) => `api/v1/organizacoes/${organizationId}/ocorrencias`,
+    members: (organizationId: string) => `api/v1/organizacoes/${organizationId}/membros`,
+    member: (organizationId: string, memberId: string) =>
+      `api/v1/organizacoes/${organizationId}/membros/${memberId}`,
+    invites: (organizationId: string) => `api/v1/organizacoes/${organizationId}/convites`,
+    pendingInvites: "api/v1/convites",
+    inviteResponse: (organizationId: string, action: "aceitar" | "recusar") =>
+      `api/v1/convites/${organizationId}/${action}`,
+  },
+
+  notificacoes: {
+    list: "api/v1/notificacoes",
+    marcarLida: (notificationId: string) => `api/v1/notificacoes/${notificationId}/lida`,
   },
 } as const;

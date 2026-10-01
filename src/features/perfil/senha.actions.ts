@@ -20,7 +20,7 @@ export async function alterarSenha(entrada: SenhaFormInput): Promise<AlterarSenh
   try {
     await apiClient(kyServer, API_ENDPOINTS.auth.senha, undefined, {
       method: "put",
-      json: resultado.value,
+      json: { senhaAtual: resultado.value.senhaAtual, novaSenha: resultado.value.novaSenha },
     });
     return { ok: true };
   } catch (error: unknown) {

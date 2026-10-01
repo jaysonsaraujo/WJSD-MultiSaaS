@@ -4,3 +4,8 @@
 # Exceção pontual: `minimumReleaseAgeExcludes = ["pacote"]` no mesmo bloco.
 [install]
 minimumReleaseAge = 259200
+
+# Spawn de oxlint/hooks em paralelo no Windows passa de 5s com o verify completo
+# no pre-push. O default do bun test derruba o gate com falso negativo.
+[test]
+timeout = 20000

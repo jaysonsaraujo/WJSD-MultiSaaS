@@ -75,35 +75,39 @@ describe("agent hook configs", () => {
     }
   });
 
-  test.each(CONFIG_PATHS)("%s só referencia hooks que existem e rodam", (configPath) => {
-    const config = JSON.parse(readFileSync(join(ROOT, configPath), "utf8")) as unknown;
-    const scripts = new Set(
-      collectCommands(config).flatMap((command) => {
-        const script = hookScriptFromCommand(command);
-        return script ? [script] : [];
-      }),
-    );
+  test.each(CONFIG_PATHS)(
+    "%s só referencia hooks que existem e rodam",
+    (configPath) => {
+      const config = JSON.parse(readFileSync(join(ROOT, configPath), "utf8")) as unknown;
+      const scripts = new Set(
+        collectCommands(config).flatMap((command) => {
+          const script = hookScriptFromCommand(command);
+          return script ? [script] : [];
+        }),
+      );
 
-    expect(scripts.size).toBeGreaterThan(0);
-    for (const script of scripts) {
-      const scriptPath = join(ROOT, "tooling/agent-hooks", script);
-      expect(existsSync(scriptPath)).toBeTrue();
+      expect(scripts.size).toBeGreaterThan(0);
+      for (const script of scripts) {
+        const scriptPath = join(ROOT, "tooling/agent-hooks", script);
+        expect(existsSync(scriptPath)).toBeTrue();
 
-      // Entrada mínima é o pior caso do host: nenhum hook pode estourar por isso.
-      // `stop_hook_active` faz o verify-before-stop sair cedo — rodar o gate
-      // inteiro aqui seria testar o `verify`, não o wiring (ele tem teste próprio).
-      const result = Bun.spawnSync(["bun", scriptPath], {
-        cwd: join(ROOT, "src"),
-        stdin: Buffer.from(JSON.stringify({ stop_hook_active: true })),
-        stdout: "pipe",
-        stderr: "pipe",
-        env: envWithoutCursorHost(
-          configPath === ".cursor/hooks.json" ? { AGENT_HOOK_SURFACE: "cursor" } : undefined,
-        ),
-      });
-      expect(result.exitCode).toBe(0);
-    }
-  });
+        // Entrada mínima é o pior caso do host: nenhum hook pode estourar por isso.
+        // `stop_hook_active` faz o verify-before-stop sair cedo — rodar o gate
+        // inteiro aqui seria testar o `verify`, não o wiring (ele tem teste próprio).
+        const result = Bun.spawnSync(["bun", scriptPath], {
+          cwd: join(ROOT, "src"),
+          stdin: Buffer.from(JSON.stringify({ stop_hook_active: true })),
+          stdout: "pipe",
+          stderr: "pipe",
+          env: envWithoutCursorHost(
+            configPath === ".cursor/hooks.json" ? { AGENT_HOOK_SURFACE: "cursor" } : undefined,
+          ),
+        });
+        expect(result.exitCode).toBe(0);
+      }
+    },
+    20_000,
+  );
 
   test("a skill pre-review é descobrível no diretório compartilhado de skills", () => {
     expect(existsSync(join(ROOT, ".agents/skills/pre-review/SKILL.md"))).toBeTrue();

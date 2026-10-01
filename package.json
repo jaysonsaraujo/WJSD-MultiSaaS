@@ -14,7 +14,7 @@
     "knip": "knip --no-progress",
     "typecheck": "bun --bun next typegen && tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "typecheck:tooling": "tsc --noEmit -p tooling/tsconfig.json",
-    "test": "bun test --pass-with-no-tests --parallel",
+    "test": "bun test --pass-with-no-tests --parallel --timeout 20000",
     "verify:fast": "bun run lint && bun run fmt:check && bun run knip && bun run test",
     "verify": "bun run lint && bun run fmt:check && bun run typecheck && bun run typecheck:tooling && bun run knip && bun run test && bun tooling/no-lint-suppression.ts && bun tooling/no-heavy-public-assets.ts"
   },

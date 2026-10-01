@@ -37,6 +37,7 @@ export type Perfil = InferOutput<typeof perfilSchema>;
 export const perfilFormSchema = object({
   nome: pipe(string(), minLength(1, "Informe o nome.")),
   email: pipe(string(), email("E-mail inválido.")),
+  telefone: nullable(string()),
 });
 
 /** Payload do formulário de perfil. */

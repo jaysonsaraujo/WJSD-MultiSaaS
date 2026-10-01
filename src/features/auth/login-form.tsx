@@ -9,8 +9,7 @@ type LoginFormProps = {
   destino: Route;
 };
 
-const CAMPO_CLASS =
-  "w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-foreground/40";
+const CAMPO_CLASS = "login-input w-full px-4 text-sm outline-none";
 
 /**
  * Formulário de login: UI fina. Estado, chamada e erro vivem no `useLoginForm`.
@@ -20,9 +19,9 @@ export function LoginForm({ destino }: LoginFormProps): React.ReactNode {
   const { register, formState } = form;
 
   return (
-    <form onSubmit={entrar} className="flex w-full max-w-sm flex-col gap-4" noValidate>
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="login-email" className="text-sm font-medium">
+    <form onSubmit={entrar} className="flex w-full flex-col gap-5" noValidate>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="login-email" className="login-label text-sm font-medium">
           E-mail
         </label>
         <input
@@ -31,17 +30,18 @@ export function LoginForm({ destino }: LoginFormProps): React.ReactNode {
           autoComplete="email"
           className={CAMPO_CLASS}
           aria-invalid={formState.errors.email !== undefined}
+          aria-describedby={formState.errors.email ? "login-email-error" : undefined}
           {...register("email")}
         />
         {formState.errors.email ? (
-          <p role="alert" className="text-sm text-red-600">
+          <p id="login-email-error" role="alert" className="text-sm text-red-400">
             {formState.errors.email.message}
           </p>
         ) : null}
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="login-senha" className="text-sm font-medium">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="login-senha" className="login-label text-sm font-medium">
           Senha
         </label>
         <input
@@ -50,17 +50,18 @@ export function LoginForm({ destino }: LoginFormProps): React.ReactNode {
           autoComplete="current-password"
           className={CAMPO_CLASS}
           aria-invalid={formState.errors.senha !== undefined}
+          aria-describedby={formState.errors.senha ? "login-senha-error" : undefined}
           {...register("senha")}
         />
         {formState.errors.senha ? (
-          <p role="alert" className="text-sm text-red-600">
+          <p id="login-senha-error" role="alert" className="text-sm text-red-400">
             {formState.errors.senha.message}
           </p>
         ) : null}
       </div>
 
       {erroServidor === null ? null : (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-400">
           {erroServidor}
         </p>
       )}
@@ -68,7 +69,7 @@ export function LoginForm({ destino }: LoginFormProps): React.ReactNode {
       <button
         type="submit"
         disabled={formState.isSubmitting}
-        className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background disabled:opacity-60"
+        className="login-primary-button mt-2 px-4 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-60"
       >
         {formState.isSubmitting ? "Entrando..." : "Entrar"}
       </button>
