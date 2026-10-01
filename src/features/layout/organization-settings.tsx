@@ -11,7 +11,7 @@ import {
   inviteResponseActions,
   organizationCreateResponseSchema,
   type InviteResponseAction,
-  type Organization,
+  type PendingInvite,
 } from "@/shared/schemas/organizations.schema";
 import { ORGANIZATION_COOKIE } from "@/shared/utils/organization";
 
@@ -25,21 +25,18 @@ const INVITE_ACTION_LABEL = {
 /**
  * Cria organização e responde convites pendentes da conta autenticada.
  *
- * @param organizations - Associações devolvidas por GET /api/v1/organizacoes.
+ * @param pendingInvites - GET /api/v1/convites.
  */
 export function OrganizationSettings({
-  organizations,
+  pendingInvites,
 }: {
-  organizations: Organization[];
+  pendingInvites: PendingInvite[];
 }): React.ReactNode {
   const router = useRouter();
   const [nome, setNome] = useState("");
   const [slug, setSlug] = useState("");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
-  const pending = organizations.filter(
-    (organization) => organization.membership_status === "invited",
-  );
 
   async function createOrganization(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -133,14 +130,13 @@ export function OrganizationSettings({
       <section className="app-development-card">
         <span className="app-development-status">Convites</span>
         <h2 className="mt-3 text-xl font-semibold">Pendentes</h2>
-        {pending.length === 0 ? (
+        {pendingInvites.length === 0 ? (
           <p className="mt-2 text-sm text-foreground/60">Nenhum convite pendente.</p>
         ) : (
           <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-            {pending.map((organization) => (
-              <li className="app-dashboard-module" key={organization.id}>
-                <strong>{organization.name}</strong>
-                <small>{organization.slug}</small>
+            {pendingInvites.map((invite) => (
+              <li className="app-dashboard-module" key={invite.organization_id}>
+                <strong>{invite.organization_name}</strong>
                 <span className="mt-2 flex flex-wrap gap-2">
                   {inviteResponseActions.map((action) => (
                     <button
@@ -148,7 +144,7 @@ export function OrganizationSettings({
                       type="button"
                       disabled={saving}
                       key={action}
-                      onClick={() => void respondInvite(organization.id, action)}
+                      onClick={() => void respondInvite(invite.organization_id, action)}
                     >
                       {INVITE_ACTION_LABEL[action]}
                     </button>

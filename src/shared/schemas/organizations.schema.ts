@@ -28,3 +28,17 @@ export const organizationCreateResponseSchema = object({
 
 export const inviteResponseActions = ["aceitar", "recusar"] as const;
 export type InviteResponseAction = (typeof inviteResponseActions)[number];
+
+/** GET /api/v1/convites → data. Source: OpenAPI OrganizationInvite. */
+const pendingInviteSchema = object({
+  user_id: string(),
+  name: string(),
+  email: string(),
+  role: picklist(["owner", "admin", "member", "viewer"]),
+  status: picklist(["active", "invited", "disabled"]),
+  created_at: string(),
+  organization_id: string(),
+  organization_name: string(),
+});
+export const pendingInvitesResponseSchema = object({ convites: array(pendingInviteSchema) });
+export type PendingInvite = InferOutput<typeof pendingInviteSchema>;

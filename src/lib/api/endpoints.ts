@@ -42,6 +42,7 @@ export const API_ENDPOINTS = {
     member: (organizationId: string, memberId: string) =>
       `api/v1/organizacoes/${organizationId}/membros/${memberId}`,
     invites: (organizationId: string) => `api/v1/organizacoes/${organizationId}/convites`,
+    pendingInvites: "api/v1/convites",
     inviteResponse: (organizationId: string, action: "aceitar" | "recusar") =>
       `api/v1/convites/${organizationId}/${action}`,
   },

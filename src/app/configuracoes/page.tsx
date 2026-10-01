@@ -5,15 +5,15 @@ import { OrganizationSettings } from "@/features/layout/organization-settings";
 import { apiClient } from "@/lib/api/client";
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import { kyServer } from "@/lib/api/ky.server";
-import { organizationsResponseSchema } from "@/shared/schemas/organizations.schema";
+import { pendingInvitesResponseSchema } from "@/shared/schemas/organizations.schema";
 
 export const instant = false;
 
 export default async function ConfiguracoesPage(): Promise<React.ReactNode> {
-  const organizations = await apiClient(
+  const invites = await apiClient(
     kyServer,
-    API_ENDPOINTS.organizations.list,
-    organizationsResponseSchema,
+    API_ENDPOINTS.organizations.pendingInvites,
+    pendingInvitesResponseSchema,
   );
 
   return (
@@ -37,7 +37,7 @@ export default async function ConfiguracoesPage(): Promise<React.ReactNode> {
             </p>
           </div>
         </header>
-        <OrganizationSettings organizations={organizations.organizacoes} />
+        <OrganizationSettings pendingInvites={invites.convites} />
       </div>
     </AppShell>
   );
