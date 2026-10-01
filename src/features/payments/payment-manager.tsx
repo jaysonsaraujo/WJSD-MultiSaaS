@@ -48,12 +48,42 @@ export function PaymentManager({
   const [reference, setReference] = useState("");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  function paymentPayload(parsedAmount: number): {
+    cliente_id: string | null;
+    valor_centavos: number;
+    metodo: PaymentMethod;
+    status: PaymentStatus;
+    referencia: string | null;
+  } {
+    return {
+      cliente_id: clientId || null,
+      valor_centavos: Math.round(parsedAmount * 100),
+      metodo: method,
+      status,
+      referencia: reference || null,
+    };
+  }
+
+  function resetForm(): void {
+    setEditingId(null);
+    setClientId("");
+    setAmount("");
+    setMethod("pix");
+    setStatus("pending");
+    setReference("");
+  }
 
   async function submit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const parsedAmount = Number(amount.replace(",", "."));
     if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
       setMessage("Informe um valor válido.");
+      return;
+    }
+    if (editingId) {
+      await updatePayment(editingId, parsedAmount);
       return;
     }
     setSaving(true);
@@ -65,13 +95,7 @@ export function PaymentManager({
         paymentResponseSchema,
         {
           method: "post",
-          json: {
-            cliente_id: clientId || null,
-            valor_centavos: Math.round(parsedAmount * 100),
-            metodo: method,
-            status,
-            referencia: reference || null,
-          },
+          json: paymentPayload(parsedAmount),
         },
       );
       setPayments((current) => [response.pagamento, ...current]);
@@ -87,11 +111,70 @@ export function PaymentManager({
       setSaving(false);
     }
   }
+
+  function startEditing(payment: Payment): void {
+    setEditingId(payment.id);
+    setClientId(payment.client_id ?? "");
+    setAmount((payment.amount_cents / 100).toFixed(2));
+    setMethod(payment.method);
+    setStatus(payment.status);
+    setReference(payment.reference ?? "");
+    setMessage("");
+  }
+
+  async function updatePayment(paymentId: string, parsedAmount: number): Promise<void> {
+    setSaving(true);
+    setMessage("");
+    try {
+      const response = await apiClient(
+        kyClient,
+        `${API_ENDPOINTS.organizations.payments(organizationId)}/${paymentId}`,
+        paymentResponseSchema,
+        { method: "patch", json: paymentPayload(parsedAmount) },
+      );
+      setPayments((current) =>
+        current.map((payment) => (payment.id === paymentId ? response.pagamento : payment)),
+      );
+      resetForm();
+      setMessage("Pagamento atualizado com sucesso.");
+    } catch (error: unknown) {
+      setMessage(
+        error instanceof Error ? error.message : "Não foi possível atualizar o pagamento.",
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function removePayment(paymentId: string): Promise<void> {
+    if (!window.confirm("Remover este pagamento?")) return;
+    setSaving(true);
+    try {
+      await apiClient(
+        kyClient,
+        `${API_ENDPOINTS.organizations.payments(organizationId)}/${paymentId}`,
+        undefined,
+        { method: "delete" },
+      );
+      setPayments((current) => current.filter((payment) => payment.id !== paymentId));
+      if (editingId === paymentId) resetForm();
+      setMessage("Pagamento removido com sucesso.");
+    } catch (error: unknown) {
+      setMessage(error instanceof Error ? error.message : "Não foi possível remover o pagamento.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <>
       <form className="app-development-card flex flex-col gap-4" onSubmit={submit}>
-        <span className="app-development-status">Novo pagamento</span>
-        <h2 className="text-xl font-semibold">Registrar pagamento</h2>
+        <span className="app-development-status">
+          {editingId ? "Editar pagamento" : "Novo pagamento"}
+        </span>
+        <h2 className="text-xl font-semibold">
+          {editingId ? "Atualizar pagamento" : "Registrar pagamento"}
+        </h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="flex flex-col gap-2 text-sm">
             Cliente (opcional)
@@ -162,7 +245,7 @@ export function PaymentManager({
           disabled={saving}
           type="submit"
         >
-          {saving ? "Salvando..." : "Registrar pagamento"}
+          {saving ? "Salvando..." : editingId ? "Atualizar pagamento" : "Registrar pagamento"}
         </button>
         {message ? <output className="text-sm text-foreground/70">{message}</output> : null}
       </form>
@@ -183,6 +266,23 @@ export function PaymentManager({
                 </small>
                 {payment.client_id ? <span>Cliente: {payment.client_id}</span> : null}
                 {payment.reference ? <span>Ref.: {payment.reference}</span> : null}
+                <span className="mt-2 flex gap-2">
+                  <button
+                    className="app-secondary-button"
+                    type="button"
+                    onClick={() => startEditing(payment)}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="app-secondary-button"
+                    type="button"
+                    disabled={saving}
+                    onClick={() => void removePayment(payment.id)}
+                  >
+                    Remover
+                  </button>
+                </span>
               </li>
             ))}
           </ul>
