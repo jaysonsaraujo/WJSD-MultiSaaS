@@ -46,4 +46,9 @@ export const API_ENDPOINTS = {
     inviteResponse: (organizationId: string, action: "aceitar" | "recusar") =>
       `api/v1/convites/${organizationId}/${action}`,
   },
+
+  notificacoes: {
+    list: "api/v1/notificacoes",
+    marcarLida: (notificationId: string) => `api/v1/notificacoes/${notificationId}/lida`,
+  },
 } as const;

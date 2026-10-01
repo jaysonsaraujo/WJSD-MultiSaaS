@@ -7,7 +7,11 @@ import { useState, useSyncExternalStore } from "react";
 
 import { LogoutButton } from "@/features/layout/logout-button";
 
-type AppShellProps = { children: React.ReactNode; organizationSlot?: React.ReactNode };
+type AppShellProps = {
+  children: React.ReactNode;
+  organizationSlot?: React.ReactNode;
+  unreadCount?: number;
+};
 
 const THEME_STORAGE_KEY = "wjsd-theme";
 const THEME_CHANGE_EVENT = "wjsd-theme-change";
@@ -95,7 +99,11 @@ function Icon({ label }: { label: keyof typeof ICONS }): React.ReactNode {
   );
 }
 
-export function AppShellClient({ children, organizationSlot }: AppShellProps): React.ReactNode {
+export function AppShellClient({
+  children,
+  organizationSlot,
+  unreadCount = 0,
+}: AppShellProps): React.ReactNode {
   const pathname = usePathname();
   const [menuAberto, setMenuAberto] = useState(false);
   const temaClaro = useSyncExternalStore(subscribeTheme, getThemeSnapshot, getServerThemeSnapshot);
@@ -149,8 +157,17 @@ export function AppShellClient({ children, organizationSlot }: AppShellProps): R
               LGPD
             </Link>
           </nav>
-          <Link href="/notificacoes" className="app-icon-button" aria-label="Notificações">
+          <Link
+            href="/notificacoes"
+            className="app-icon-button"
+            aria-label={unreadCount > 0 ? `Notificações, ${unreadCount} não lidas` : "Notificações"}
+          >
             <Image src="/icons/notificacoes.png" alt="" width={32} height={32} />
+            {unreadCount > 0 ? (
+              <span aria-hidden="true" className="app-notification-count">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            ) : null}
           </Link>
           <button
             type="button"

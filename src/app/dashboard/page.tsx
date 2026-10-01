@@ -74,7 +74,7 @@ async function DashboardContent(): Promise<React.ReactNode> {
         <span className="app-development-status">Próxima etapa</span>
         <h2 className="mt-3 text-xl font-semibold">Ainda em aberto</h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/60">
-          Test-Drive, Histórico e notificações continuam aguardando contrato no backend.
+          Test-Drive e Histórico continuam aguardando contrato no backend.
         </p>
       </section>
     </>
